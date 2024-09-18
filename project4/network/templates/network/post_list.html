@@ -1,0 +1,54 @@
+<div class="post_list">
+    {% for post in results %}
+    <div class="justify-content-center row mt-10">
+        <div class="card " style="width: 65%">
+            <div class=" card-body ">
+                <h5 class=" card-title"><a href="{% url 'profile' post.user.id %}">{{post.user.username}}</a>
+                    {% if request.user.id == post.user.id %}
+                    <button id="edit_post" class="btn btn-primary btn-sm" data-postid="{{post.id}}">Edit</button>
+                    {% endif%}
+                </h5>
+                <div class="form-group" id="text-{{post.id}}">
+                    <p class="card-text">{{post.text}}</p>
+
+                </div>
+
+                <div class="box" id="{{post.id}}">
+                    {% if user.is_authenticated %}
+                    <i id="like_icon" class="card-link" data-feather="heart" {% if request.user in post.likes %}
+                        fill="red" {% else %} fill="white" {% endif %}>{% csrf_token %}
+
+
+                    </i>
+                    {%endif%}
+                    <p id="like_{{post.id}}"> {{post.likes |length }}</p>
+                    <p>Like(s)</p>
+                </div>
+
+                <h8 class="card-subtitle mb-2 text-muted">{{post.timestamp}}</h8>
+
+            </div>
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center mt-5">
+        {% if current_page > 1 %}
+        <li class="page-item ">
+            <a class="page-link" href="{{ request.path }}?page={{current_page|add:-1}}">Previous</a>
+        </li>
+        {%endif%}
+        {% for page in range %}
+        <li class=" page-item {% if current_page == page%} active{%endif%}"><a class="page-link"
+                href="{{ request.path }}?page={{page}}">{{page}}</a>
+        </li>
+        {% endfor %}
+        {% if current_page < number_of_pages%} <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page={{current_page|add:1}}">Next</a>
+            </li>
+            {%endif%}
+    </ul>
+</nav>

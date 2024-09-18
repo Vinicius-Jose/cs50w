@@ -1,0 +1,38 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<div class="card ">
+    <div class="card-header text-center">
+        {{user.username}}
+    </div>
+    <div class="card-body">
+        <div class="box align-center-box">
+            <h5 class="card-title text-center">Followers: {{user.followers.all|length}}</h5>
+            <h5 class="card-title text-center">Following: {{user.following_list.all|length}}</h5>
+
+        </div>
+        <div class="box align-center-box">
+            <form action="{% url 'follow' user.id  %}" method="post" id="form_follow">
+                {% csrf_token %}
+                {% if request.user.id != user.id and request.user.is_authenticated %}
+                {% if request.user in user.followers.all%}
+                <input type="submit" class="btn btn-primary" value="Unfollow"></a>
+                {% else %}
+                <input type="submit" class="btn btn-primary" value="Follow"></a>
+                {% endif%}
+                {% endif%}
+            </form>
+        </div>
+        <p class="card-text">
+
+            {% include "network/post_list.html"%}
+
+
+        </p>
+    </div>
+    <div class="card-footer text-muted">
+        {{user.username}}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+
+<h2>Listing: {{listing.title}}</h2>
+<img class="card-img-top mx-sm-3 mb-2 w-25 p-3" src="{{listing.photo}}" alt="No image provided">
+<p class="card-title">Price: ${{listing.get_current_price|floatformat:2 }}</p>
+
+<p>{{number_bids}} bid(s). {% if is_winning%} Your bid is the current bid {%elif have_make_bid%} Your bid is under the
+    current price {% else%} You haven't make a bid yet{%endif%}</p>
+
+{% if listing.is_active and request.user.is_authenticated%}
+<form action="{% url 'bid' listing.id %}" method="post" class="form-group mx-sm-3 mb-2 w-50 p-3">
+    {% csrf_token %}
+    <div class="form-group">
+        {{bid_form}}
+    </div>
+    <button type="submit" class="btn btn-primary">Place bid</button>
+</form>
+{% endif%}
+
+<h4> Details</h4>
+<ul class="list-group list-group-flush">
+    <li class="list-group-item">Listed by {{listing.seller.username}}</li>
+    <li class="list-group-item">Category: {% if listing.category %} {{listing.category}} {%else%} No category
+        listed{%endif%}</li>
+    <li class="list-group-item">Description {{listing.description}}</li>
+    <li class="list-group-item">Starting bid {{listing.starting_bid|floatformat:2}}</li>
+    {% if not listing.is_active %}
+    {%if listing.get_winner.user.id == request.user.id %}
+    <h5 class="list-group-item">You are the winner, enjoy your product</h5>
+    {%endif%}
+    <li class="list-group-item">Winner: {{listing.get_winner.user.username}}</li>
+    {% endif %}
+</ul>
+
+{% if request.user.is_authenticated %}
+
+{% if listing.seller.id == request.user.id %}
+<form action="{% url 'listing' listing.id %}" method="post" class="form-group mx-sm-3 mb-2 w-50 p-3">
+    {% csrf_token %}
+
+    <button type="submit" class="btn btn-primary">{% if listing.is_active %} Close Listing {% else %} Open Listing
+        {%endif%}</button>
+</form>
+{% endif%}
+
+
+<form action="{% url 'watchlist' listing.id  %}" method="post" class="form-group mx-sm-3 mb-2 w-50 p-3">
+    {% csrf_token %}
+
+    <button type="submit" class="btn btn-primary">{% if watchlisted %} Remove from watchlist {% else%} Watchlist
+        {%endif%}</button>
+</form>
+
+<form action="{% url 'commentary' listing.id %}" method="post" class="form-group mx-sm-3 mb-2 w-50 p-3">
+    {% csrf_token %}
+    {{commentary_form}}
+    <button type="submit" class="btn btn-primary mt-5">Add Commentary</button>
+</form>
+{%endif%}
+<div class="container ml-0">
+    <div class="row d-flex ">
+        <div class="col-md-12 col-lg-10 pl-0">
+            <div class="card text-body">
+                <div class="card-body p-4">
+                    <h4 class="mb-0">Comments</h4>
+                    {% for commentary in listing.listing_comments.all %}
+
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex flex-start">
+                                <div class="w-100">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="text-primary fw-bold mb-0">
+                                            User: {{commentary.user.username}}:
+                                            <span class="text-body ms-2">{{commentary.text}}</span>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {%endfor%}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock %}

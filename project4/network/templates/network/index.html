@@ -1,0 +1,23 @@
+{% extends "network/layout.html"%}
+
+
+{% block body %}
+{% if user.is_authenticated %}
+<form class="justify-content-center row" action="{% url 'post' %}" method="post">
+    {% csrf_token %}
+    <div class="card" style="width: 65%">
+        <div class=" card-body ">
+            <h5 class=" card-title">New Post</h5>
+            <div class="form-group">
+                <label for="postContent">Example textarea</label>
+                <textarea class="form-control" name="postContent" id="postContent" rows="3" maxlength="200"
+                    required></textarea>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Post"></input>
+        </div>
+    </div>
+</form>
+{% endif %}
+{% include "network/post_list.html"%}
+
+{% endblock %}

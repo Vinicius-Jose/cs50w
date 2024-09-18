@@ -1,0 +1,9 @@
+body {
+    padding: 10px;
+}
+
+.card-img-top {
+    max-width: 277px;
+    height: 200px;
+    object-fit: contain;
+}

@@ -1,0 +1,33 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+{% if is_edit%}
+{{title}}
+{% else %}
+New entry
+{%endif%}
+{% endblock %}
+
+
+{% block body %}
+{% if is_edit%}
+<form class="col-md-10 ml-3 mt-3" action="{% url 'edit' title %}" method="post">
+    {% else %}
+    <form class="col-md-10 ml-3 mt-3" action="{% url 'add' %}" method="post">
+        {%endif%}
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="entryTitle">Entry title</label>
+            <input type="text" class="form-control" id="entryTitle" placeholder="Entry title" name="entry_title"
+                value="{{title}}" {% if is_edit%} readonly {% else%} required {% endif %}>
+        </div>
+        <div class="form-group">
+            <label for="entryContent">Entry description</label>
+            <textarea class="form-control" id="entryContent" rows="10" name="entry_content"
+                placeholder="Entry content in markdown format">{{entry_content}}</textarea>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Save" />
+
+    </form>
+
+    {% endblock %}

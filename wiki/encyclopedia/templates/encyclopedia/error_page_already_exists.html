@@ -1,0 +1,12 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block body %}
+
+
+<h1>Error 409</h1>
+<p> The requested page {{title}} alreadt exists, please consider <a href="{% url 'edit' title %}">edit</a> </p>
+{% endblock %}

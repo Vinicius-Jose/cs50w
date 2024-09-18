@@ -1,0 +1,21 @@
+.body {
+    margin-top: 30px;
+
+}
+
+.post_list {
+    margin-top: 20px;
+}
+
+.box {
+    display: flex;
+    gap: 10px;
+
+
+}
+
+.align-center-box {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
